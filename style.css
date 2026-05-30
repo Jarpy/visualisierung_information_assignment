@@ -1,0 +1,320 @@
+:root {
+    --bg: #f5f7f4;
+    --surface: #ffffff;
+    --border: #dde3db;
+    --text: #1a2420;
+    --muted: #6b7f79;
+    --accent: #1a9e5c;
+    --accent2: #d4860a;
+    --accent3: #1878c2;
+    --danger: #c93030;
+
+    --c-solar: #e8a020;
+    --c-wind: #1878c2;
+    --c-hydro: #1a9e5c;
+    --c-nuclear: #8b44cc;
+    --c-coal: #6e6e6e;
+    --c-gas: #d4560a;
+    --c-oil: #c93030;
+    --c-other: #8fa8a2;
+
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'IBM Plex Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+
+    --max-w: 1200px;
+    --step-w: 640px;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body), serif;
+    font-size: 1rem;
+    line-height: 1.65;
+}
+
+.container {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.mono {
+    font-family: var(--font-mono), serif;
+}
+
+.accent {
+    color: var(--accent);
+}
+
+.accent2 {
+    color: var(--accent2);
+}
+
+.accent3 {
+    color: var(--accent3);
+}
+
+.muted {
+    color: var(--muted);
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+}
+
+/* Landing Page */
+#landing-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+}
+
+#landing-page h1 {
+    font-family: var(--font-display), serif;
+    font-size: 6rem;
+    font-weight: 800;
+    line-height: 1.05;
+    max-width: 18ch;
+    margin-bottom: 2rem;
+}
+
+#landing-page p {
+    max-width: 55ch;
+    color: var(--muted);
+    font-size: 2rem;
+    margin-bottom: 3rem;
+}
+
+#landing-page .scroll-hint {
+    font-family: var(--font-mono), serif;
+    font-size: 1rem;
+    color: var(--muted);
+}
+
+
+.section {
+    padding: 6rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.section-label {
+    font-family: var(--font-mono), serif;
+    font-size: 1rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+}
+
+.section-title {
+    font-family: var(--font-display), serif;
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.section-intro {
+    max-width: 60ch;
+    color: var(--muted);
+    margin-bottom: 3rem;
+}
+
+/* Chart containers */
+.chart-wrapper {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.5rem;
+    position: relative;
+}
+
+.chart-wrapper svg {
+    display: block;
+    width: 100%;
+    overflow: visible;
+}
+
+.side-by-side-chart-wrapper {
+    display: grid;
+    grid-template-columns:1fr 1fr;
+    gap: 1.5rem;
+}
+
+/* Tooltip */
+.tooltip {
+    position: fixed;
+    pointer-events: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 0.5rem 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text);
+    border-radius: 2px;
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+/* ── Controls / Selectors ────────────────────────────────────────── */
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    align-items: center;
+}
+
+.select-styled {
+    appearance: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    padding: 0.4rem 2rem 0.4rem 0.75rem;
+    border-radius: 2px;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236b8480'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.6rem center;
+}
+
+.select-styled:focus {
+    outline: 1px solid var(--accent);
+}
+
+.btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding: 0.35rem 0.9rem;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+}
+
+.btn:hover, .btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* ── Legend ──────────────────────────────────────────────────────── */
+.legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 1rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.legend-swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+/* ── Scrollytelling layout ────────────────────────────────────────── */
+#scrolly {
+    position: relative;
+}
+
+#scrolly .sticky-graphic {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#scrolly .steps {
+    position: relative;
+    z-index: 2;
+    pointer-events: none; /* let clicks through to sticky graphic */
+}
+
+.step {
+    max-width: var(--step-w);
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    background: color-mix(in srgb, var(--surface) 90%, transparent);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-bottom: 80vh; /* space between steps */
+    pointer-events: auto;
+    opacity: 0.4;
+    transition: opacity 0.4s;
+}
+
+.step.is-active {
+    opacity: 1;
+}
+
+.step p {
+    font-size: 0.95rem;
+    color: var(--muted);
+}
+
+.step strong {
+    color: var(--text);
+    font-weight: 500;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────── */
+footer {
+    padding: 3rem 2rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+}
+
+footer a {
+    color: var(--muted);
+    text-decoration: underline;
+}
+
+footer a:hover {
+    color: var(--accent);
+}
+
+/* ── Placeholder chart message ───────────────────────────────────── */
+.chart-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 320px;
+    border: 1px dashed var(--border);
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-align: center;
+    padding: 2rem;
+}
