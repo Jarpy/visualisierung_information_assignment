@@ -9,15 +9,6 @@
     --accent3: #1878c2;
     --danger: #c93030;
 
-    --c-solar: #e8a020;
-    --c-wind: #1878c2;
-    --c-hydro: #1a9e5c;
-    --c-nuclear: #8b44cc;
-    --c-coal: #6e6e6e;
-    --c-gas: #d4560a;
-    --c-oil: #c93030;
-    --c-other: #8fa8a2;
-
     --font-display: 'Syne', sans-serif;
     --font-body: 'IBM Plex Sans', sans-serif;
     --font-mono: 'IBM Plex Mono', monospace;
@@ -154,14 +145,13 @@ body {
     gap: 1.5rem;
 }
 
-/* Tooltip */
 .tooltip {
     position: fixed;
     pointer-events: none;
     background: var(--surface);
     border: 1px solid var(--border);
     padding: 0.5rem 0.75rem;
-    font-family: var(--font-mono);
+    font-family: var(--font-mono), serif;
     font-size: 0.75rem;
     color: var(--text);
     border-radius: 2px;
@@ -170,7 +160,6 @@ body {
     transition: opacity 0.15s;
 }
 
-/* ── Controls / Selectors ────────────────────────────────────────── */
 .controls {
     display: flex;
     flex-wrap: wrap;
