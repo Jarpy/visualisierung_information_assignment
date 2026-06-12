@@ -9,15 +9,6 @@
     --accent3: #1878c2;
     --danger: #c93030;
 
-    --c-solar: #e8a020;
-    --c-wind: #1878c2;
-    --c-hydro: #1a9e5c;
-    --c-nuclear: #8b44cc;
-    --c-coal: #6e6e6e;
-    --c-gas: #d4560a;
-    --c-oil: #c93030;
-    --c-other: #8fa8a2;
-
     --font-display: 'Syne', sans-serif;
     --font-body: 'IBM Plex Sans', sans-serif;
     --font-mono: 'IBM Plex Mono', monospace;
@@ -142,7 +133,6 @@ body {
     gap: 1.5rem;
 }
 
-/* Tooltip */
 .tooltip {
     position: fixed;
     pointer-events: none;
