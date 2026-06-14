@@ -62,6 +62,7 @@
     </div>
 </section>
 
+<!-- SECTION 2 — Historical Development -->
 <section id="section-history" class="section">
     <div class="container">
         <p class="section-label">02 — Historical Development</p>
@@ -71,6 +72,41 @@
             the narrative or select a country to explore.
         </p>
     </div>
+
+    <div id="scrolly">
+        <div class="sticky-graphic">
+            <div class="container" style="width:100%;">
+                <div class="controls" style="margin-top:1rem;">
+                    <select class="select-styled" id="country-select" aria-label="Select country">
+                        <option value="world">Global Mix</option>
+                        <option value="AT">Austria</option>
+                        <option value="DE">Germany</option>
+                        <option value="US">United States</option>
+                    </select>
+                </div>
+                <div class="chart-wrapper">
+                    <!-- Target container for our D3 Stacked Area Graph -->
+                    <div id="area-chart"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="steps" id="scrolly-steps">
+            <div class="step" data-year="1990">
+                <p><strong>1990 – The Fossil Era.</strong> At the start of our timeline, coal, oil, and gas dominated global power generation grids. Renewable alternatives were tiny fractions of total output.</p>
+            </div>
+            <div class="step" data-year="2002">
+                <p><strong>2002 – Shifting Baseloads.</strong> Hydroelectric power held steady as a reliable foundation, while natural gas began replacing more carbon-heavy coal infrastructures globally.</p>
+            </div>
+            <div class="step" data-year="2014">
+                <p><strong>2014 – The Clean Tech Dawn.</strong> Thanks to manufacturing scaling up, production costs for wind and solar plummeted. Modern capacity expansions began shifting upwards.</p>
+            </div>
+            <div class="step" data-year="2026">
+                <p><strong>2026 – The Turning Point.</strong> Today, clean tech represents the fastest-growing sector on earth. In Austria, the domestic clean mix has surged past 80% towards full sustainability.</p>
+            </div>
+        </div>
+    </div>
+</section>
 
     <div id="scrolly">
         <div class="sticky-graphic">

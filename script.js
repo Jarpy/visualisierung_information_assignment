@@ -1,3 +1,6 @@
+// =========================================================================
+// GLOBAL CONTROLS & UTILITIES
+// =========================================================================
 const tooltip = d3.select('#tooltip');
 
 function showTooltip(event, html) {
@@ -18,6 +21,133 @@ function hideTooltip() {
     tooltip.style('opacity', 0);
 }
 
+// =========================================================================
+// SECTION 2 HISTORICAL DEVELOPMENT DATA & GRAPH ENGINE
+// =========================================================================
+const historicalEnergyData = {
+    world: [
+        { year: 1990, coal: 4400, oil: 2800, gas: 2100, nuclear: 1900, hydro: 2100, solar: 10,   wind: 30   },
+        { year: 1996, coal: 4600, oil: 2900, gas: 2300, nuclear: 2100, hydro: 2300, solar: 20,   wind: 70   },
+        { year: 2002, coal: 4900, oil: 2700, gas: 2600, nuclear: 2300, hydro: 2500, solar: 50,   wind: 150  },
+        { year: 2008, coal: 5500, oil: 2500, gas: 3100, nuclear: 2200, hydro: 2800, solar: 120,  wind: 320  },
+        { year: 2014, coal: 5800, oil: 2200, gas: 3400, nuclear: 2100, hydro: 3300, solar: 380,  wind: 720  },
+        { year: 2020, coal: 5400, oil: 1800, gas: 3700, nuclear: 2200, hydro: 3700, solar: 850,  wind: 1200 },
+        { year: 2026, coal: 5100, oil: 1500, gas: 3900, nuclear: 2300, hydro: 4100, solar: 1600, wind: 1900 }
+    ],
+    AT: [
+        { year: 1990, coal: 45, oil: 35, gas: 50, nuclear: 0, hydro: 180, solar: 1,   wind: 2   },
+        { year: 1996, coal: 40, oil: 32, gas: 55, nuclear: 0, hydro: 195, solar: 2,   wind: 5   },
+        { year: 2002, coal: 38, oil: 28, gas: 62, nuclear: 0, hydro: 210, solar: 5,   wind: 12  },
+        { year: 2008, coal: 30, oil: 22, gas: 68, nuclear: 0, hydro: 225, solar: 15,  wind: 28  },
+        { year: 2014, coal: 18, oil: 15, gas: 58, nuclear: 0, hydro: 245, solar: 35,  wind: 52  },
+        { year: 2020, coal: 5,  oil: 8,  gas: 62, nuclear: 0, hydro: 260, solar: 85,  wind: 88  },
+        { year: 2026, coal: 0,  oil: 2,  gas: 45, nuclear: 0, hydro: 280, solar: 190, wind: 140 }
+    ],
+    DE: [
+        { year: 1990, coal: 320, oil: 45, gas: 40, nuclear: 140, hydro: 22, solar: 1,   wind: 2   },
+        { year: 1996, coal: 290, oil: 42, gas: 52, nuclear: 150, hydro: 24, solar: 2,   wind: 8   },
+        { year: 2002, coal: 280, oil: 38, gas: 65, nuclear: 145, hydro: 25, solar: 5,   wind: 25  },
+        { year: 2008, coal: 260, oil: 30, gas: 82, nuclear: 130, hydro: 27, solar: 18,  wind: 48  },
+        { year: 2014, coal: 240, oil: 22, gas: 71, nuclear: 90,  hydro: 29, solar: 42,  wind: 68  },
+        { year: 2020, coal: 160, oil: 15, gas: 90, nuclear: 60,  hydro: 28, solar: 55,  wind: 115 },
+        { year: 2026, coal: 110, oil: 8,  gas: 75, nuclear: 0,   hydro: 30, solar: 98,  wind: 155 }
+    ],
+    US: [
+        { year: 1990, coal: 1600, oil: 120, gas: 380, nuclear: 610, hydro: 290, solar: 2,   wind: 3   },
+        { year: 1996, coal: 1800, oil: 110, gas: 480, nuclear: 700, hydro: 320, solar: 3,   wind: 8   },
+        { year: 2002, coal: 1900, oil: 105, gas: 650, nuclear: 780, hydro: 270, solar: 5,   wind: 15  },
+        { year: 2008, coal: 2000, oil: 90,  gas: 910, nuclear: 800, hydro: 280, solar: 12,  wind: 55  },
+        { year: 2014, coal: 1600, oil: 70,  gas: 1150, nuclear: 800, hydro: 290, solar: 30,  wind: 180 },
+        { year: 2020, coal: 950,  oil: 60,  gas: 1600, nuclear: 790, hydro: 300, solar: 115, wind: 340 },
+        { year: 2026, coal: 700,  oil: 45,  gas: 1750, nuclear: 770, hydro: 310, solar: 260, wind: 490 }
+    ]
+};
+
+const energyKeys = ["coal", "oil", "gas", "nuclear", "hydro", "solar", "wind"];
+
+function drawAreaChart(selector, data) {
+    const container = d3.select(selector);
+    container.html(""); 
+
+    const margin = { top: 40, right: 90, bottom: 40, left: 65 };
+    const width = container.node().getBoundingClientRect().width - margin.left - margin.right;
+    const height = 420 - margin.top - margin.bottom;
+
+    const svg = container.append("svg")
+        .attr("viewBox", `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
+        .append("g")
+        .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+    const x = d3.scaleLinear().domain([1990, 2026]).range([0, width]);
+    const stack = d3.stack().keys(energyKeys);
+    const stackedData = stack(data);
+    const y = d3.scaleLinear().domain([0, d3.max(stackedData[stackedData.length - 1], d => d[1])]).nice().range([height, 0]);
+
+    const colorMap = {
+        coal: "var(--c-coal)", oil: "var(--c-oil)", gas: "var(--c-gas)",
+        nuclear: "var(--c-nuclear)", hydro: "var(--c-hydro)",
+        solar: "var(--c-solar)", wind: "var(--c-wind)"
+    };
+
+    const areaGenerator = d3.area()
+        .x(d => x(d.data.year))
+        .y0(d => y(d[0]))
+        .y1(d => y(d[1]))
+        .curve(d3.curveMonotoneX);
+
+    svg.append("g").attr("class", "grid").call(d3.axisLeft(y).tickSize(-width).tickFormat(""));
+
+    svg.selectAll(".layer")
+        .data(stackedData).enter().append("path")
+        .attr("class", d => `layer layer-${d.key}`)
+        .attr("d", areaGenerator)
+        .style("fill", d => colorMap[d.key])
+        .style("opacity", 0.9);
+
+    svg.selectAll(".layer-label")
+        .data(stackedData).enter().append("text")
+        .attr("x", width + 8)
+        .attr("y", d => y((d[d.length - 1][0] + d[d.length - 1][1]) / 2))
+        .attr("dy", "0.35em")
+        .style("font-family", "var(--font-mono)")
+        .style("font-size", "0.68rem")
+        .style("font-weight", "700")
+        .style("fill", d => colorMap[d.key])
+        .text(d => d.key.toUpperCase());
+
+    svg.append("g")
+        .attr("transform", `translate(0, ${height})`)
+        .call(d3.axisBottom(x).tickFormat(d3.format("d")).ticks(6))
+        .style("font-family", "var(--font-mono)")
+        .style("font-size", "0.75rem");
+
+    svg.append("g").call(d3.axisLeft(y).ticks(6)).style("font-family", "var(--font-mono)").style("font-size", "0.75rem");
+
+    svg.append("text")
+        .attr("x", -margin.left + 15).attr("y", -15)
+        .style("font-family", "var(--font-mono)").style("font-size", "0.72rem").style("fill", "var(--muted)")
+        .text("Generation Volume (TWh)");
+
+    const trackingLine = svg.append("line")
+        .attr("class", "timeline-marker")
+        .attr("x1", x(1990)).attr("y1", 0).attr("x2", x(1990)).attr("y2", height)
+        .attr("stroke", "var(--text)").attr("stroke-width", 2).attr("stroke-dasharray", "4,4")
+        .style("opacity", 0);
+
+    window.updateTimelineMarker = function(targetYear) {
+        if (!targetYear) {
+            trackingLine.style("opacity", 0);
+        } else {
+            trackingLine.style("opacity", 1)
+                .transition().duration(600)
+                .attr("x1", x(targetYear)).attr("x2", x(targetYear));
+        }
+    };
+}
+
+// =========================================================================
+// INTERACTIVE RUNTIME LISTENERS (SCROLLAMA & DROPDOWNS)
+// =========================================================================
 const scroller = scrollama();
 
 scroller
@@ -29,13 +159,22 @@ scroller
     .onStepEnter(({element, index}) => {
         d3.selectAll('.step').classed('is-active', false);
         d3.select(element).classed('is-active', true);
+        
+        const associatedYear = d3.select(element).attr('data-year');
+        if (typeof window.updateTimelineMarker === "function" && associatedYear) {
+            window.updateTimelineMarker(parseInt(associatedYear));
+        }
         console.log('Scrollama step enter:', index);
     })
     .onStepExit(({element}) => {
         d3.select(element).classed('is-active', false);
     });
 
-window.addEventListener('resize', scroller.resize);
+window.addEventListener('resize', () => {
+    scroller.resize();
+    const activeCountry = d3.select('#country-select').property('value') || 'world';
+    drawAreaChart('#area-chart', historicalEnergyData[activeCountry]);
+});
 
 d3.select('#region-select').on('change', function () {
     console.log('Region changed to:', this.value);
@@ -44,29 +183,26 @@ d3.select('#region-select').on('change', function () {
 d3.selectAll('[data-view]').on('click', function () {
     d3.selectAll('[data-view]').classed('active', false);
     d3.select(this).classed('active', true);
-    console.log('View toggled to:', d3.select(this).attr('data-view'));
 });
 
 d3.selectAll('[data-year]').on('click', function () {
     d3.selectAll('[data-year]').classed('active', false);
     d3.select(this).classed('active', true);
-    console.log('Year toggled to:', d3.select(this).attr('data-year'));
 });
 
 d3.select('#country-select').on('change', function () {
-    console.log('Country changed to:', this.value);
+    drawAreaChart('#area-chart', historicalEnergyData[this.value]);
 });
 
-// Listener to handle dropdown updates instantly across charts
 d3.select('#criterion-select').on('change', function () {
     const criterion = this.value;
     drawRadial('#radial-compare', sustainabilityData, criterion);
     drawColumnCompare('#column-compare', sustainabilityData, criterion);
 });
 
+// Placeholder definitions preserved for future scaling
 function drawPieTotal(selector, data) {}
 function drawPieRenewables(selector, data) {}
-function drawAreaChart(selector, data) {}
 function drawAustriaBar(selector, data, year) {}
 
 // =========================================================================
@@ -278,8 +414,14 @@ function energyColorScale(sources) {
         .range(sources.map(s => energyColors[s.toLowerCase()] ?? energyColors.other));
 }
 
-// Initial draw sequence setup
+// =========================================================================
+// APPLICATION INITIALIZATION INITIALIZER
+// =========================================================================
 setTimeout(() => {
+    // Render Section 2 Historical Canvas
+    drawAreaChart('#area-chart', historicalEnergyData.world);
+
+    // Render Section 4 Comparison Elements
     const initMetric = d3.select('#criterion-select').property('value') || 'deaths';
     drawRadial('#radial-compare', sustainabilityData, initMetric);
     drawColumnCompare('#column-compare', sustainabilityData, initMetric);

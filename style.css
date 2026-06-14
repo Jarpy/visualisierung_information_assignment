@@ -304,3 +304,26 @@ footer a:hover { color: var(--accent); }
 .bar {
     transition: opacity 0.15s ease;
 }
+
+/* Custom Additions for Section 2 Area Chart Component */
+#area-chart {
+    width: 100%;
+    min-height: 380px;
+    position: relative;
+}
+
+.timeline-marker {
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.grid line {
+    stroke: var(--border);
+    stroke-opacity: 0.4;
+    shape-rendering: crispEdges;
+}
+
+.layer:hover {
+    opacity: 1 !important;
+    filter: brightness(1.05);
+}
