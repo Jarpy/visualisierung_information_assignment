@@ -48,21 +48,10 @@ body {
     font-family: var(--font-mono), serif;
 }
 
-.accent {
-    color: var(--accent);
-}
-
-.accent2 {
-    color: var(--accent2);
-}
-
-.accent3 {
-    color: var(--accent3);
-}
-
-.muted {
-    color: var(--muted);
-}
+.accent { color: var(--accent); }
+.accent2 { color: var(--accent2); }
+.accent3 { color: var(--accent3); }
+.muted { color: var(--muted); }
 
 .visually-hidden {
     position: absolute;
@@ -104,7 +93,6 @@ body {
     font-size: 1rem;
     color: var(--muted);
 }
-
 
 .section {
     padding: 6rem 0;
@@ -150,7 +138,7 @@ body {
 
 .side-by-side-chart-wrapper {
     display: grid;
-    grid-template-columns:1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
 }
 
@@ -160,17 +148,18 @@ body {
     pointer-events: none;
     background: var(--surface);
     border: 1px solid var(--border);
-    padding: 0.5rem 0.75rem;
+    padding: 0.6rem 0.85rem;
     font-family: var(--font-mono);
     font-size: 0.75rem;
     color: var(--text);
-    border-radius: 2px;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     z-index: 999;
     opacity: 0;
     transition: opacity 0.15s;
 }
 
-/* ── Controls / Selectors ────────────────────────────────────────── */
+/* Controls */
 .controls {
     display: flex;
     flex-wrap: wrap;
@@ -215,7 +204,7 @@ body {
     color: var(--accent);
 }
 
-/* ── Legend ──────────────────────────────────────────────────────── */
+/* Legend */
 .legend {
     display: flex;
     flex-wrap: wrap;
@@ -239,11 +228,8 @@ body {
     flex-shrink: 0;
 }
 
-/* ── Scrollytelling layout ────────────────────────────────────────── */
-#scrolly {
-    position: relative;
-}
-
+/* Scrollytelling layout */
+#scrolly { position: relative; }
 #scrolly .sticky-graphic {
     position: sticky;
     top: 0;
@@ -252,11 +238,10 @@ body {
     align-items: center;
     justify-content: center;
 }
-
 #scrolly .steps {
     position: relative;
     z-index: 2;
-    pointer-events: none; /* let clicks through to sticky graphic */
+    pointer-events: none;
 }
 
 .step {
@@ -266,27 +251,15 @@ body {
     background: color-mix(in srgb, var(--surface) 90%, transparent);
     border: 1px solid var(--border);
     border-radius: 4px;
-    margin-bottom: 80vh; /* space between steps */
+    margin-bottom: 80vh;
     pointer-events: auto;
     opacity: 0.4;
     transition: opacity 0.4s;
 }
+.step.is-active { opacity: 1; }
+.step p { font-size: 0.95rem; color: var(--muted); }
+.step strong { color: var(--text); font-weight: 500; }
 
-.step.is-active {
-    opacity: 1;
-}
-
-.step p {
-    font-size: 0.95rem;
-    color: var(--muted);
-}
-
-.step strong {
-    color: var(--text);
-    font-weight: 500;
-}
-
-/* ── Footer ──────────────────────────────────────────────────────── */
 footer {
     padding: 3rem 2rem;
     font-family: var(--font-mono);
@@ -294,17 +267,9 @@ footer {
     color: var(--muted);
     border-top: 1px solid var(--border);
 }
+footer a { color: var(--muted); text-decoration: underline; }
+footer a:hover { color: var(--accent); }
 
-footer a {
-    color: var(--muted);
-    text-decoration: underline;
-}
-
-footer a:hover {
-    color: var(--accent);
-}
-
-/* ── Placeholder chart message ───────────────────────────────────── */
 .chart-placeholder {
     display: flex;
     align-items: center;
@@ -317,4 +282,25 @@ footer a:hover {
     color: var(--muted);
     text-align: center;
     padding: 2rem;
+}
+
+/* --- D3 Radial Mind Map Corrections --- */
+.energy-node text {
+    font-family: var(--font-body);
+    fill: var(--text);
+    pointer-events: none;
+    letter-spacing: -0.01em;
+}
+
+.grid line {
+    stroke: var(--border);
+    stroke-opacity: 0.5;
+    shape-rendering: crispEdges;
+}
+.grid path {
+    stroke-width: 0;
+}
+
+.bar {
+    transition: opacity 0.15s ease;
 }
