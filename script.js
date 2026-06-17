@@ -21,6 +21,166 @@ function hideTooltip() {
     tooltip.style('opacity', 0);
 }
 
+ENERGY_COLORS = {
+    solar: "#e8a020",
+    wind: "#1878c2",
+    oil: "#c93030",
+    gas: "#d4560a",
+    coal: "#6e6e6e",
+    nuclear: "#8b44cc",
+    hydro: "#1a9e5c",
+    renewables: "#044300",
+    biomass: "#0f1f33",
+    other: "#8fa8a2"
+};
+
+// =========================================================================
+// SECTION 1 CURRENT STATE
+// =========================================================================
+
+REGIONS = [
+    { key: "northAmerica", label: "North America" },
+    { key: "southAndCentralAmerica", label: "South & Cent. America" },
+    { key: "europe", label: "Europe" },
+    { key: "cis", label: "Commonwealth of Independent States" },
+    { key: "middleEast", label: "Middle East" },
+    { key: "africa", label: "Africa" },
+    { key: "asiaPacific", label: "Asia & Pacific" }
+];
+
+CHAPTER1_STATE = {
+    region: "northAmerica",
+    activeSource: null
+};
+
+async function initChapter1() {
+    setupChapter1Controls();
+    initRegionDropdown();
+    await drawPieTotal("#pie-total");
+}
+
+async function drawPieTotal(selector) {
+    const data = await d3.csv("../datasets/current_state.csv", d3.autoType);
+
+    const filtered = data.filter(d => d.region === CHAPTER1_STATE.region);
+
+    renderLegend(filtered);
+
+    const aggregated = d3.rollups(
+        filtered,
+        v => d3.sum(v, d => d.value),
+        d => d.source
+    ).map(([source, value]) => ({ source, value }));
+
+    renderPie(selector, aggregated);
+}
+
+function renderPie(selector, data) {
+    const width = 400;
+    const height = 400;
+    const radius = Math.min(width, height) / 2;
+
+    d3.select(selector).selectAll("*").remove();
+
+    const svg = d3.select(selector)
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+    const g = svg.append("g")
+        .attr("transform", `translate(${width/2}, ${height/2})`);
+
+    const pie = d3.pie().value(d => d.value);
+    const arcData = pie(data);
+
+    const arc = d3.arc()
+        .innerRadius(0)
+        .outerRadius(radius - 10);
+
+    const arcHover = d3.arc()
+        .innerRadius(0)
+        .outerRadius(radius - 2);
+
+    const paths = g.selectAll("path")
+        .data(arcData)
+        .join("path")
+        .attr("d", arc)
+        .attr("fill", d => ENERGY_COLORS[d.data.source.toLowerCase()] ?? ENERGY_COLORS.other)
+        .attr("stroke", "#fff")
+        .style("stroke-width", "2px")
+        .style("cursor", "pointer");
+
+    paths
+        .on("mouseenter", function (event, d) {
+            paths
+                .transition()
+                .duration(120)
+                .style("opacity", 0.3)
+                .attr("d", arc);
+
+            d3.select(this)
+                .transition()
+                .duration(120)
+                .style("opacity", 1)
+                .attr("d", arcHover);
+
+            showTooltip(event, `
+                <strong>${d.data.source}</strong><br/>
+                ${d.data.value}
+            `);
+        })
+        .on("mousemove", moveTooltip)
+        .on("mouseleave", function () {
+            paths``
+                .transition()
+                .duration(120)
+                .style("opacity", 1)
+                .attr("d", arc);
+
+            hideTooltip();
+        });
+}
+
+function renderLegend(data) {
+    const totals = d3.rollups(
+        data,
+        v => d3.sum(v, d => d.value),
+        d => d.source
+    ).map(([source, value]) => ({ source, value }));
+
+    totals.sort((a, b) => d3.descending(a.value, b.value));
+
+    const legend = d3.select("#energy-legend");
+
+    legend.selectAll(".legend-item")
+        .data(totals)
+        .join("span")
+        .attr("class", "legend-item")
+        .html(d => `
+            <span class="legend-swatch"
+                  style="background:${ENERGY_COLORS[d.source.toLowerCase()] ?? ENERGY_COLORS.other}">
+            </span>
+            ${d.source}
+        `);
+}
+
+function initRegionDropdown() {
+    const select = d3.select("#region-select");
+
+    select.selectAll("option")
+        .data(REGIONS)
+        .join("option")
+        .attr("value", d => d.key)
+        .text(d => d.label);
+}
+
+function setupChapter1Controls() {
+    d3.select('#region-select').on('change', async function () {
+        CHAPTER1_STATE.region = this.value;
+        await drawPieTotal('#pie-total');
+    });
+}
+
 // =========================================================================
 // SECTION 2 HISTORICAL DEVELOPMENT DATA & GRAPH ENGINE
 // =========================================================================
@@ -83,12 +243,6 @@ function drawAreaChart(selector, data) {
     const stackedData = stack(data);
     const y = d3.scaleLinear().domain([0, d3.max(stackedData[stackedData.length - 1], d => d[1])]).nice().range([height, 0]);
 
-    const colorMap = {
-        coal: "var(--c-coal)", oil: "var(--c-oil)", gas: "var(--c-gas)",
-        nuclear: "var(--c-nuclear)", hydro: "var(--c-hydro)",
-        solar: "var(--c-solar)", wind: "var(--c-wind)"
-    };
-
     const areaGenerator = d3.area()
         .x(d => x(d.data.year))
         .y0(d => y(d[0]))
@@ -101,7 +255,7 @@ function drawAreaChart(selector, data) {
         .data(stackedData).enter().append("path")
         .attr("class", d => `layer layer-${d.key}`)
         .attr("d", areaGenerator)
-        .style("fill", d => colorMap[d.key])
+        .style("fill", d => ENERGY_COLORS[d.key.toLowerCase()] ?? ENERGY_COLORS.other)
         .style("opacity", 0.9);
 
     svg.selectAll(".layer-label")
@@ -112,7 +266,7 @@ function drawAreaChart(selector, data) {
         .style("font-family", "var(--font-mono)")
         .style("font-size", "0.68rem")
         .style("font-weight", "700")
-        .style("fill", d => colorMap[d.key])
+        .style("fill", d => ENERGY_COLORS[d.key.toLowerCase()] ?? ENERGY_COLORS.other)
         .text(d => d.key.toUpperCase());
 
     svg.append("g")
@@ -146,72 +300,12 @@ function drawAreaChart(selector, data) {
 }
 
 // =========================================================================
-// INTERACTIVE RUNTIME LISTENERS (SCROLLAMA & DROPDOWNS)
-// =========================================================================
-const scroller = scrollama();
-
-scroller
-    .setup({
-        step: '#scrolly-steps .step',
-        offset: 0.5,
-        debug: false,
-    })
-    .onStepEnter(({element, index}) => {
-        d3.selectAll('.step').classed('is-active', false);
-        d3.select(element).classed('is-active', true);
-        
-        const associatedYear = d3.select(element).attr('data-year');
-        if (typeof window.updateTimelineMarker === "function" && associatedYear) {
-            window.updateTimelineMarker(parseInt(associatedYear));
-        }
-        console.log('Scrollama step enter:', index);
-    })
-    .onStepExit(({element}) => {
-        d3.select(element).classed('is-active', false);
-    });
-
-window.addEventListener('resize', () => {
-    scroller.resize();
-    const activeCountry = d3.select('#country-select').property('value') || 'world';
-    drawAreaChart('#area-chart', historicalEnergyData[activeCountry]);
-});
-
-d3.select('#region-select').on('change', function () {
-    console.log('Region changed to:', this.value);
-});
-
-d3.selectAll('[data-view]').on('click', function () {
-    d3.selectAll('[data-view]').classed('active', false);
-    d3.select(this).classed('active', true);
-});
-
-d3.selectAll('[data-year]').on('click', function () {
-    d3.selectAll('[data-year]').classed('active', false);
-    d3.select(this).classed('active', true);
-});
-
-d3.select('#country-select').on('change', function () {
-    drawAreaChart('#area-chart', historicalEnergyData[this.value]);
-});
-
-d3.select('#criterion-select').on('change', function () {
-    const criterion = this.value;
-    drawRadial('#radial-compare', sustainabilityData, criterion);
-    drawColumnCompare('#column-compare', sustainabilityData, criterion);
-});
-
-// Placeholder definitions preserved for future scaling
-function drawPieTotal(selector, data) {}
-function drawPieRenewables(selector, data) {}
-function drawAustriaBar(selector, data, year) {}
-
-// =========================================================================
 // SECTION 4 REAL IMPLEMENTATION DATA & LOGIC
 // =========================================================================
 const sustainabilityData = [
     { source: "Coal", deaths: 24.6, co2: 820, cost: 105, land: 12 },
     { source: "Oil", deaths: 18.4, co2: 720, cost: 130, land: 15 },
-    { source: "Natural Gas", deaths: 2.8, co2: 490, cost: 60, land: 10 },
+    { source: "Gas", deaths: 2.8, co2: 490, cost: 60, land: 10 },
     { source: "Biomass", deaths: 4.6, co2: 230, cost: 90, land: 150 },
     { source: "Water", deaths: 0.02, co2: 34, cost: 70, land: 30 },
     { source: "Wind", deaths: 0.04, co2: 11, cost: 40, land: 45 },
@@ -349,12 +443,7 @@ function drawColumnCompare(selector, data, criterion) {
         .range([0, width]).domain(data.map(d => d.source)).padding(0.3);
 
     const y = d3.scaleLinear()
-        .range([height, 0]).domain([0, d3.max(data, d => d[criterion])]).nice();
-
-    const colorMapper = (src) => {
-        const dict = { "Coal":"coal", "Oil":"oil", "Natural Gas":"gas", "Biomass":"other", "Water":"hydro", "Wind":"wind", "Solar":"solar", "Nuclear":"nuclear"};
-        return `var(--c-${dict[src] || 'other'})`;
-    };
+        .range([height, 0]).domain([0, d3.max(data, d => d[criterion])]).nice()
 
     svg.append("g").attr("class", "grid").call(d3.axisLeft(y).tickSize(-width).tickFormat(""));
 
@@ -365,7 +454,7 @@ function drawColumnCompare(selector, data, criterion) {
         .attr("width", x.bandwidth())
         .attr("y", d => y(d[criterion]))
         .attr("height", d => height - y(d[criterion]))
-        .attr("fill", d => colorMapper(d.source))
+        .attr("fill", d => ENERGY_COLORS[d.source.toLowerCase()] ?? ENERGY_COLORS.other)
         .attr("rx", 2)
         .on("mouseover", function(event, d) {
             d3.select(this).style("opacity", 0.85);
@@ -397,27 +486,13 @@ function drawColumnCompare(selector, data, criterion) {
         .text(`${metricDetails[criterion].label} ${metricDetails[criterion].unit}`);
 }
 
-const energyColors = {
-    solar: 'var(--c-solar)',
-    wind: 'var(--c-wind)',
-    hydro: 'var(--c-hydro)',
-    nuclear: 'var(--c-nuclear)',
-    coal: 'var(--c-coal)',
-    gas: 'var(--c-gas)',
-    oil: 'var(--c-oil)',
-    other: 'var(--c-other)',
-};
-
-function energyColorScale(sources) {
-    return d3.scaleOrdinal()
-        .domain(sources)
-        .range(sources.map(s => energyColors[s.toLowerCase()] ?? energyColors.other));
-}
-
 // =========================================================================
 // APPLICATION INITIALIZATION INITIALIZER
 // =========================================================================
-setTimeout(() => {
+document.addEventListener("DOMContentLoaded", async () => {
+    // Render Section 1 Current State
+    await initChapter1();
+
     // Render Section 2 Historical Canvas
     drawAreaChart('#area-chart', historicalEnergyData.world);
 
@@ -425,6 +500,4 @@ setTimeout(() => {
     const initMetric = d3.select('#criterion-select').property('value') || 'deaths';
     drawRadial('#radial-compare', sustainabilityData, initMetric);
     drawColumnCompare('#column-compare', sustainabilityData, initMetric);
-}, 100);
-
-console.log('✅ Libraries and Visuals loaded: D3 v' + d3.version);
+});

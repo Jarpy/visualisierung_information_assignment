@@ -8,11 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
     <script src="https://unpkg.com/scrollama@3.2.0/build/scrollama.min.js"></script>
 
-    <script src="js/state.js"></script>
-    <script src="js/utils.js"></script>
-
-    <script src="js/chapter1-current.js"></script>
-    <script src="js/main.js"></script>
+    <script src="script.js"></script>
 
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
@@ -30,6 +26,7 @@
     </div>
 </section>
 
+<!-- SECTION 1 - Current state -->
 <section id="section-current" class="section">
     <div class="container">
         <p class="section-label">01 — Current State</p>
@@ -61,18 +58,11 @@
         </div>
 
         <div class="legend" id="energy-legend">
-            <span class="legend-item"><span class="legend-swatch" style="background:var(--c-solar)"></span>Solar</span>
-            <span class="legend-item"><span class="legend-swatch" style="background:var(--c-wind)"></span>Wind</span>
-            <span class="legend-item"><span class="legend-swatch" style="background:var(--c-hydro)"></span>Hydro</span>
-            <span class="legend-item"><span class="legend-swatch" style="background:var(--c-nuclear)"></span>Nuclear</span>
-            <span class="legend-item"><span class="legend-swatch" style="background:var(--c-coal)"></span>Coal</span>
-            <span class="legend-item"><span class="legend-swatch" style="background:var(--c-gas)"></span>Gas</span>
-            <span class="legend-item"><span class="legend-swatch" style="background:var(--c-oil)"></span>Oil</span>
         </div>
     </div>
 </section>
 
-<!-- SECTION 2 — Historical Development -->
+<!-- SECTION 2 - Historical Development -->
 <section id="section-history" class="section">
     <div class="container">
         <p class="section-label">02 — Historical Development</p>
@@ -95,7 +85,6 @@
                     </select>
                 </div>
                 <div class="chart-wrapper">
-                    <!-- Target container for our D3 Stacked Area Graph -->
                     <div id="area-chart"></div>
                 </div>
             </div>
@@ -118,41 +107,7 @@
     </div>
 </section>
 
-    <div id="scrolly">
-        <div class="sticky-graphic">
-            <div class="container" style="width:100%;">
-                <div class="controls" style="margin-top:1rem;">
-                    <select class="select-styled" id="country-select" aria-label="Select country">
-                        <option value="world">World</option>
-                        <option value="AT">Austria</option>
-                        <option value="DE">Germany</option>
-                        <option value="US">United States</option>
-                        <option value="CN">China</option>
-                    </select>
-                </div>
-                <div class="chart-wrapper">
-                    <div id="area-chart" class="chart-placeholder"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="steps" id="scrolly-steps">
-            <div class="step" data-step="0">
-                <p><strong>1965 – the fossil era.</strong> Coal and oil dominated every major economy. Renewables were barely a rounding error in global statistics.</p>
-            </div>
-            <div class="step" data-step="1">
-                <p><strong>1973 – the oil crisis.</strong> Sudden supply shocks forced governments to explore alternatives. Nuclear and hydro began their slow expansion.</p>
-            </div>
-            <div class="step" data-step="2">
-                <p><strong>2000s – the solar &amp; wind dawn.</strong> Costs for photovoltaics fell precipitously. Wind capacity expanded across Europe and North America.</p>
-            </div>
-            <div class="step" data-step="3">
-                <p><strong>Today – a turning point.</strong> For the first time, renewables account for a third of global electricity generation. Austria already exceeds 80 %.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
+<!-- SECTION 3 - austria potential -->
 <section id="section-austria" class="section">
     <div class="container">
         <p class="section-label">03 — Austria's Renewable Potential</p>
@@ -172,6 +127,7 @@
     </div>
 </section>
 
+<!-- SECTION 4 - pros/cons -->
 <section id="section-compare" class="section">
     <div class="container">
         <p class="section-label">04 — Pros, Cons &amp; Costs</p>
@@ -214,7 +170,5 @@
         <p style="margin-top:0.5rem;">TU Wien · Interactive Visual Storytelling · Assignment 3</p>
     </div>
 </footer>
-
-<script src="script.js"></script>
 </body>
 </html>
