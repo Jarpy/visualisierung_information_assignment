@@ -8,6 +8,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
     <script src="https://unpkg.com/scrollama@3.2.0/build/scrollama.min.js"></script>
 
+    <script src="script.js"></script>
+
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
@@ -24,7 +26,7 @@
     </div>
 </section>
 
-<!-- SECTION 1 — Current State -->
+<!-- SECTION 1 - Current state -->
 <section id="section-current" class="section">
     <div class="container">
         <p class="section-label">01 — Current State</p>
@@ -36,33 +38,26 @@
 
         <div class="controls">
             <select class="select-styled" id="region-select" aria-label="Select region">
-                <option value="world">World</option>
+                <option value="northAmerica">North America</option>
+                <option value="southAndCentralAmerica">South & Cent. America</option>
                 <option value="europe">Europe</option>
-                <option value="austria">Austria</option>
+                <option value="cis">Commonwealth of Independent States</option>
+                <option value="middleEast">Middle East</option>
+                <option value="africa">Africa</option>
+                <option value="asiaPacific">Asia & Pacific</option>
             </select>
         </div>
 
         <div class="side-by-side-chart-wrapper">
             <div class="chart-wrapper">
-                <div id="pie-total" class="chart-placeholder">
-                </div>
+                <div id="pie-total" class="chart-placeholder"></div>
             </div>
             <div class="chart-wrapper">
-                <div id="pie-renewables" class="chart-placeholder">
-                </div>
+                <div id="pie-renewables" class="chart-placeholder"></div>
             </div>
         </div>
 
         <div class="legend" id="energy-legend">
-            <!-- placeholder before d3 impl -->
-            <span class="legend-item"><span class="legend-swatch" style="background:var(--c-solar)"></span>Solar</span>
-            <span class="legend-item"><span class="legend-swatch" style="background:var(--c-wind)"></span>Wind</span>
-            <span class="legend-item"><span class="legend-swatch" style="background:var(--c-hydro)"></span>Hydro</span>
-            <span class="legend-item"><span class="legend-swatch"
-                                            style="background:var(--c-nuclear)"></span>Nuclear</span>
-            <span class="legend-item"><span class="legend-swatch" style="background:var(--c-coal)"></span>Coal</span>
-            <span class="legend-item"><span class="legend-swatch" style="background:var(--c-gas)"></span>Gas</span>
-            <span class="legend-item"><span class="legend-swatch" style="background:var(--c-oil)"></span>Oil</span>
         </div>
     </div>
 </section>
@@ -83,50 +78,42 @@
             <div class="container" style="width:100%;">
                 <div class="controls" style="margin-top:1rem;">
                     <select class="select-styled" id="country-select" aria-label="Select country">
-                        <option value="world">World</option>
+                        <option value="world">Global Mix</option>
                         <option value="AT">Austria</option>
                         <option value="DE">Germany</option>
                         <option value="US">United States</option>
-                        <option value="CN">China</option>
                     </select>
                 </div>
                 <div class="chart-wrapper">
-                    <div id="area-chart" class="chart-placeholder">
-                    </div>
+                    <div id="area-chart"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Narrative steps -->
         <div class="steps" id="scrolly-steps">
-            <div class="step" data-step="0">
-                <p><strong>1965 – the fossil era.</strong> Coal and oil dominated every major economy. Renewables were
-                    barely a rounding error in global statistics.</p>
+            <div class="step" data-year="1990">
+                <p><strong>1990 – The Fossil Era.</strong> At the start of our timeline, coal, oil, and gas dominated global power generation grids. Renewable alternatives were tiny fractions of total output.</p>
             </div>
-            <div class="step" data-step="1">
-                <p><strong>1973 – the oil crisis.</strong> Sudden supply shocks forced governments to explore
-                    alternatives. Nuclear and hydro began their slow expansion.</p>
+            <div class="step" data-year="2002">
+                <p><strong>2002 – Shifting Baseloads.</strong> Hydroelectric power held steady as a reliable foundation, while natural gas began replacing more carbon-heavy coal infrastructures globally.</p>
             </div>
-            <div class="step" data-step="2">
-                <p><strong>2000s – the solar &amp; wind dawn.</strong> Costs for photovoltaics fell precipitously. Wind
-                    capacity expanded across Europe and North America.</p>
+            <div class="step" data-year="2014">
+                <p><strong>2014 – The Clean Tech Dawn.</strong> Thanks to manufacturing scaling up, production costs for wind and solar plummeted. Modern capacity expansions began shifting upwards.</p>
             </div>
-            <div class="step" data-step="3">
-                <p><strong>Today – a turning point.</strong> For the first time, renewables account for a third of
-                    global electricity generation. Austria already exceeds 80 %.</p>
+            <div class="step" data-year="2026">
+                <p><strong>2026 – The Turning Point.</strong> Today, clean tech represents the fastest-growing sector on earth. In Austria, the domestic clean mix has surged past 80% towards full sustainability.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- SECTION 3 — Austria's Potential -->
+<!-- SECTION 3 - austria potential -->
 <section id="section-austria" class="section">
     <div class="container">
         <p class="section-label">03 — Austria's Renewable Potential</p>
         <h2 class="section-title">2030 &amp; 2040 outlook</h2>
         <p class="section-intro">
-            Based on the TU Wien study <em>"Erneuerbare Energiepotenziale in
-            Österreich für 2030 und 2040"</em> — what capacity can Austria unlock?
+            Based on the TU Wien study <em>"Erneuerbare Energiepotenziale in Österreich für 2030 und 2040"</em> — what capacity can Austria unlock?
         </p>
 
         <div class="controls">
@@ -135,13 +122,12 @@
         </div>
 
         <div class="chart-wrapper">
-            <div id="bar-austria" class="chart-placeholder">
-            </div>
+            <div id="bar-austria" class="chart-placeholder"></div>
         </div>
     </div>
 </section>
 
-<!-- SECTION 4 — Pros / Cons / Costs -->
+<!-- SECTION 4 - pros/cons -->
 <section id="section-compare" class="section">
     <div class="container">
         <p class="section-label">04 — Pros, Cons &amp; Costs</p>
@@ -162,12 +148,10 @@
 
         <div class="side-by-side-chart-wrapper">
             <div class="chart-wrapper">
-                <div id="radial-compare" class="chart-placeholder">
-                </div>
+                <div id="radial-compare"></div>
             </div>
             <div class="chart-wrapper">
-                <div id="column-compare" class="chart-placeholder">
-                </div>
+                <div id="column-compare"></div>
             </div>
         </div>
     </div>
@@ -179,12 +163,9 @@
     <div class="container">
         <p>
             Data sources:
-            <a href="https://www.data.gv.at/datasets/daten-der-studie-erneuerbare-energiepotenziale-in-oesterreich-fuer-2030-und-2040"
-               target="_blank" rel="noopener">Erneuerbare Energiepotenziale in Österreich</a> ·
-            <a href="https://www.energyinst.org/statistical-review" target="_blank" rel="noopener">Statistical Review of
-                World Energy</a> ·
-            <a href="https://ourworldindata.org/grapher/death-rates-from-energy-production-per-twh" target="_blank"
-               rel="noopener">Our World in Data</a>
+            <a href="https://www.data.gv.at/datasets/daten-der-studie-erneuerbare-energiepotenziale-in-oesterreich-fuer-2030-und-2040" target="_blank" rel="noopener">Erneuerbare Energiepotenziale in Österreich</a> ·
+            <a href="https://www.energyinst.org/statistical-review" target="_blank" rel="noopener">Statistical Review of World Energy</a> ·
+            <a href="https://ourworldindata.org/grapher/death-rates-from-energy-production-per-twh" target="_blank" rel="noopener">Our World in Data</a>
         </p>
         <p style="margin-top:0.5rem;">TU Wien · Interactive Visual Storytelling · Assignment 3</p>
     </div>
