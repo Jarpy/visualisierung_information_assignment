@@ -1,24 +1,27 @@
 // =========================================================================
 // GLOBAL CONTROLS & UTILITIES
 // =========================================================================
-const tooltip = d3.select('#tooltip');
+let tooltip;
 
 function showTooltip(event, html) {
+    if (!tooltip) tooltip = d3.select('#tooltip');
+
     tooltip
         .style('opacity', 1)
         .html(html)
-        .style('left', (event.clientX + 14) + 'px')
-        .style('top', (event.clientY - 28) + 'px');
+        .style('left', (event.pageX + 14) + 'px')
+        .style('top', (event.pageY - 28) + 'px');
 }
 
 function moveTooltip(event) {
+    if (!tooltip) tooltip = d3.select('#tooltip');
     tooltip
-        .style('left', (event.clientX + 14) + 'px')
-        .style('top', (event.clientY - 28) + 'px');
+        .style('left', (event.pageX + 14) + 'px')
+        .style('top', (event.pageY - 28) + 'px');
 }
 
 function hideTooltip() {
-    tooltip.style('opacity', 0);
+    if (tooltip) tooltip.style('opacity', 0);
 }
 
 ENERGY_COLORS = {
@@ -97,10 +100,6 @@ function renderPie(selector, data) {
         .innerRadius(0)
         .outerRadius(radius - 10);
 
-    const arcHover = d3.arc()
-        .innerRadius(0)
-        .outerRadius(radius - 2);
-
     const paths = g.selectAll("path")
         .data(arcData)
         .join("path")
@@ -112,31 +111,21 @@ function renderPie(selector, data) {
 
     paths
         .on("mouseenter", function (event, d) {
-            paths
-                .transition()
-                .duration(120)
-                .style("opacity", 0.3)
-                .attr("d", arc);
+            paths.transition().duration(200).style("opacity", 0.2);
 
             d3.select(this)
-                .transition()
-                .duration(120)
-                .style("opacity", 1)
-                .attr("d", arcHover);
+                .transition().duration(200)
+                .style("opacity", 1);
 
             showTooltip(event, `
                 <strong>${d.data.source}</strong><br/>
-                ${d.data.value}
+                ${d.data.value.toFixed(2)} TWh
             `);
         })
         .on("mousemove", moveTooltip)
         .on("mouseleave", function () {
-            paths``
-                .transition()
-                .duration(120)
-                .style("opacity", 1)
-                .attr("d", arc);
-
+            // Restore all segments
+            paths.transition().duration(200).style("opacity", 0.9);
             hideTooltip();
         });
 }

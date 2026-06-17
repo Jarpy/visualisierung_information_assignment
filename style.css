@@ -134,18 +134,18 @@ body {
 }
 
 .tooltip {
-    position: fixed;
+    position: absolute;
     pointer-events: none;
+    opacity: 0;
+    z-index: 1000;
     background: var(--surface);
     border: 1px solid var(--border);
     padding: 0.6rem 0.85rem;
-    font-family: var(--font-mono);
+    font-family: var(--font-mono), serif;
     font-size: 0.75rem;
     color: var(--text);
     border-radius: 4px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    z-index: 999;
-    opacity: 0;
     transition: opacity 0.15s;
 }
 
