@@ -288,6 +288,17 @@ function drawAreaChart(selector, data) {
     };
 }
 
+function setupChapter2Controls() {
+    d3.select('#country-select').on('change', function () {
+        const selectedCountry = this.value;
+        const countryData = historicalEnergyData[selectedCountry];
+
+        if (countryData) {
+            drawAreaChart('#area-chart', countryData);
+        }
+    });
+}
+
 // =========================================================================
 // SECTION 4 REAL IMPLEMENTATION DATA & LOGIC
 // =========================================================================
@@ -475,6 +486,15 @@ function drawColumnCompare(selector, data, criterion) {
         .text(`${metricDetails[criterion].label} ${metricDetails[criterion].unit}`);
 }
 
+function setupChapter4Controls() {
+    d3.select('#criterion-select').on('change', function () {
+        const selectedCriterion = this.value;
+
+        drawRadial('#radial-compare', sustainabilityData, selectedCriterion);
+        drawColumnCompare('#column-compare', sustainabilityData, selectedCriterion);
+    });
+}
+
 // =========================================================================
 // APPLICATION INITIALIZATION INITIALIZER
 // =========================================================================
@@ -484,9 +504,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Render Section 2 Historical Canvas
     drawAreaChart('#area-chart', historicalEnergyData.world);
+    setupChapter2Controls();
 
     // Render Section 4 Comparison Elements
     const initMetric = d3.select('#criterion-select').property('value') || 'deaths';
     drawRadial('#radial-compare', sustainabilityData, initMetric);
     drawColumnCompare('#column-compare', sustainabilityData, initMetric);
+    setupChapter4Controls();
 });
