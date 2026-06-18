@@ -59,8 +59,8 @@ CHAPTER1_STATE = {
 async function initChapter1() {
     setupChapter1();
     initRegionDropdown();
-    await drawPieChart("#pie-total", "../datasets/current_state_total.csv");
-    await drawPieChart("#pie-renewables", "../datasets/current_state_renewable.csv");
+    await drawPieChart("#pie-total", "./datasets/current_state_total.csv");
+    await drawPieChart("#pie-renewables", "./datasets/current_state_renewable.csv");
 }
 
 async function drawPieChart(selector, dataPath) {
