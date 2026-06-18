@@ -57,17 +57,18 @@ CHAPTER1_STATE = {
 };
 
 async function initChapter1() {
-    setupChapter1Controls();
+    setupChapter1();
     initRegionDropdown();
-    await drawPieTotal("#pie-total");
+    await drawPieChart("#pie-total", "../datasets/current_state_total.csv");
+    await drawPieChart("#pie-renewables", "../datasets/current_state_renewable.csv");
 }
 
-async function drawPieTotal(selector) {
-    const data = await d3.csv("../datasets/current_state.csv", d3.autoType);
+async function drawPieChart(selector, dataPath) {
+    const data = await d3.csv(dataPath, d3.autoType);
 
     const filtered = data.filter(d => d.region === CHAPTER1_STATE.region);
 
-    renderLegend(filtered);
+    renderLegend(selector, filtered);
 
     const aggregated = d3.rollups(
         filtered,
@@ -124,13 +125,12 @@ function renderPie(selector, data) {
         })
         .on("mousemove", moveTooltip)
         .on("mouseleave", function () {
-            // Restore all segments
             paths.transition().duration(200).style("opacity", 0.9);
             hideTooltip();
         });
 }
 
-function renderLegend(data) {
+function renderLegend(selector, data) {
     const totals = d3.rollups(
         data,
         v => d3.sum(v, d => d.value),
@@ -139,7 +139,7 @@ function renderLegend(data) {
 
     totals.sort((a, b) => d3.descending(a.value, b.value));
 
-    const legend = d3.select("#energy-legend");
+    const legend = d3.select(`${selector}-legend`);
 
     legend.selectAll(".legend-item")
         .data(totals)
@@ -163,10 +163,11 @@ function initRegionDropdown() {
         .text(d => d.label);
 }
 
-function setupChapter1Controls() {
+function setupChapter1() {
     d3.select('#region-select').on('change', async function () {
         CHAPTER1_STATE.region = this.value;
-        await drawPieTotal('#pie-total');
+        await drawPieChart("#pie-total", "../datasets/current_state_total.csv");
+        await drawPieChart("#pie-renewables", "../datasets/current_state_renewable.csv");
     });
 }
 

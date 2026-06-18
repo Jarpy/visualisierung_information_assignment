@@ -85,6 +85,18 @@ body {
     color: var(--muted);
 }
 
+.chart-subtitle {
+    font-family: var(--font-mono), monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6b7f79; /* Adjust this to match your project's '--muted' variable */
+    text-align: center;
+    margin-bottom: 1.5rem;
+    margin-top: 0;
+}
+
 .section {
     padding: 6rem 0;
     border-bottom: 1px solid var(--border);
@@ -187,11 +199,6 @@ body {
     border-radius: 2px;
     cursor: pointer;
     transition: border-color 0.15s, color 0.15s;
-}
-
-.btn:hover, .btn.active {
-    border-color: var(--accent);
-    color: var(--accent);
 }
 
 /* Legend */
