@@ -56,11 +56,14 @@ CHAPTER1_STATE = {
     activeSource: null
 };
 
+TOTAL_ENERGY_SOURCE_PATH = "./datasets/current_state_total.csv" ;
+RENEWABLE_ENERGY_SOURCE_PATH = "./datasets/current_state_renewable.csv" ;
+
 async function initChapter1() {
     setupChapter1();
     initRegionDropdown();
-    await drawPieChart("#pie-total", "./datasets/current_state_total.csv");
-    await drawPieChart("#pie-renewables", "./datasets/current_state_renewable.csv");
+    await drawPieChart("#pie-total", TOTAL_ENERGY_SOURCE_PATH);
+    await drawPieChart("#pie-renewables", RENEWABLE_ENERGY_SOURCE_PATH);
 }
 
 async function drawPieChart(selector, dataPath) {
@@ -166,8 +169,8 @@ function initRegionDropdown() {
 function setupChapter1() {
     d3.select('#region-select').on('change', async function () {
         CHAPTER1_STATE.region = this.value;
-        await drawPieChart("#pie-total", "../datasets/current_state_total.csv");
-        await drawPieChart("#pie-renewables", "../datasets/current_state_renewable.csv");
+        await drawPieChart("#pie-total", TOTAL_ENERGY_SOURCE_PATH);
+        await drawPieChart("#pie-renewables", RENEWABLE_ENERGY_SOURCE_PATH);
     });
 }
 
