@@ -37,28 +37,25 @@
         </p>
 
         <div class="controls">
-            <select class="select-styled" id="region-select" aria-label="Select region">
-                <option value="northAmerica">North America</option>
-                <option value="southAndCentralAmerica">South & Cent. America</option>
-                <option value="europe">Europe</option>
-                <option value="cis">Commonwealth of Independent States</option>
-                <option value="middleEast">Middle East</option>
-                <option value="africa">Africa</option>
-                <option value="asiaPacific">Asia & Pacific</option>
-            </select>
+            <select class="select-styled" id="region-select" aria-label="Select region"></select>
         </div>
 
         <div class="side-by-side-chart-wrapper">
             <div class="chart-wrapper">
+                <h3 class="chart-subtitle">Total Electricity Mix</h3>
                 <div id="pie-total" class="chart-placeholder"></div>
+                <div class="legend" id="pie-total-legend">
+                </div>
             </div>
             <div class="chart-wrapper">
+                <h3 class="chart-subtitle">Renewable Energy Share</h3>
                 <div id="pie-renewables" class="chart-placeholder"></div>
+                <div class="legend" id="pie-renewables-legend">
+                </div>
             </div>
         </div>
 
-        <div class="legend" id="energy-legend">
-        </div>
+
     </div>
 </section>
 
@@ -117,8 +114,10 @@
         </p>
 
         <div class="controls">
-            <button class="btn active" data-year="2030">2030</button>
-            <button class="btn" data-year="2040">2040</button>
+            <select class="select-styled" id="date-select" aria-label="Select date range">
+                <option value="1990">2030</option>
+                <option value="1990">2040</option>
+            </select>
         </div>
 
         <div class="chart-wrapper">
