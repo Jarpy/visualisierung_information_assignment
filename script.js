@@ -292,6 +292,36 @@ function drawAreaChart(selector, data) {
     };
 }
 
+function initScrollama() {
+    const scroller = scrollama();
+
+    scroller
+        .setup({
+            step: "#scrolly-steps .step",
+            offset: 0.4,
+            debug: false
+        })
+        .onStepEnter(response => {
+            d3.selectAll("#scrolly-steps .step")
+                .classed("is-active", false);
+
+            d3.select(response.element)
+                .classed("is-active", true);
+
+            const targetYear = +response.element.dataset.year;
+
+            if (window.updateTimelineMarker) {
+                window.updateTimelineMarker(targetYear);
+            }
+        })
+        .onStepExit(response => {
+            d3.select(response.element)
+                .classed("is-active", false);
+        });
+
+    window.addEventListener("resize", scroller.resize);
+}
+
 function setupChapter2Controls() {
     d3.select('#country-select').on('change', function () {
         const selectedCountry = this.value;
@@ -509,6 +539,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Render Section 2 Historical Canvas
     drawAreaChart('#area-chart', historicalEnergyData.world);
     setupChapter2Controls();
+    initScrollama();
 
     // Render Section 4 Comparison Elements
     const initMetric = d3.select('#criterion-select').property('value') || 'deaths';
