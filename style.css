@@ -327,3 +327,51 @@ footer a:hover { color: var(--accent); }
     opacity: 1 !important;
     filter: brightness(1.05);
 }
+
+/* Section 3 */
+#bar-austria {
+    padding-left: 1rem;
+    position: relative;
+}
+
+#bar-austria .grid line {
+    stroke: var(--border, #dde3db);
+    stroke-opacity: 0.6;
+    shape-rendering: crispEdges;
+}
+
+.layer.currentPercentage {
+    fill: var(--accent);
+}
+
+.layer.potentialPercentage {
+    fill: var(--accent2);
+}
+
+.bar-rect {
+    cursor: pointer;
+    transition: filter 0.15s ease;
+    rx: 3px;
+}
+
+.bar-rect.current {  }
+.bar-rect.potential { fill: var(--accent2); }
+
+.legend-swatch.current { background: var(--accent); }
+.legend-swatch.potential { background: var(--accent2); }
+
+/* Bar Chart Labels */
+.bar-label {
+    font-family: var(--font-mono), serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    fill: #ffffff;
+    pointer-events: none;
+    text-anchor: middle;
+}
+
+.axis-source {
+    font-family: var(--font-body), serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+}

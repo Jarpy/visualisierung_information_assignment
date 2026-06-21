@@ -110,18 +110,22 @@
         <p class="section-label">03 — Austria's Renewable Potential</p>
         <h2 class="section-title">2030 &amp; 2040 outlook</h2>
         <p class="section-intro">
-            Based on the TU Wien study <em>"Erneuerbare Energiepotenziale in Österreich für 2030 und 2040"</em> — what capacity can Austria unlock?
+            Based on the TU Wien study <em>"Erneuerbare Energiepotenziale in Österreich für 2030 und 2040"</em> — what capacity can Austria unlock? Current and potential until given year are given as a percentage of the technical maximum value for each category
         </p>
 
         <div class="controls">
             <select class="select-styled" id="date-select" aria-label="Select date range">
-                <option value="1990">2030</option>
-                <option value="1990">2040</option>
+                <option value="2030">2030</option>
+                <option value="2040">2040</option>
             </select>
         </div>
 
         <div class="chart-wrapper">
             <div id="bar-austria" class="chart-placeholder"></div>
+            <div class="legend">
+                <span class="legend-item"><span class="legend-swatch current"></span>Current Usage</span>
+                <span class="legend-item"><span class="legend-swatch potential"></span>Potential Expansion until given year</span>
+            </div>
         </div>
     </div>
 </section>
@@ -162,11 +166,11 @@
     <div class="container">
         <p>
             Data sources:
-            <a href="https://www.data.gv.at/datasets/daten-der-studie-erneuerbare-energiepotenziale-in-oesterreich-fuer-2030-und-2040" target="_blank" rel="noopener">Erneuerbare Energiepotenziale in Österreich</a> ·
-            <a href="https://www.energyinst.org/statistical-review" target="_blank" rel="noopener">Statistical Review of World Energy</a> ·
-            <a href="https://ourworldindata.org/grapher/death-rates-from-energy-production-per-twh" target="_blank" rel="noopener">Our World in Data</a>
+            <a href="https://www.data.gv.at/datasets/daten-der-studie-erneuerbare-energiepotenziale-in-oesterreich-fuer-2030-und-2040" target="_blank">Erneuerbare Energiepotenziale in Österreich</a> ·
+            <a href="https://www.energyinst.org/statistical-review" target="_blank">Statistical Review of World Energy</a> ·
+            <a href="https://ourworldindata.org/grapher/death-rates-from-energy-production-per-twh" target="_blank">Our World in Data</a>
         </p>
-        <p style="margin-top:0.5rem;">TU Wien · Interactive Visual Storytelling · Assignment 3</p>
+        <p style="margin-top:0.5rem;">TU Wien - Interactive Visual Storytelling - Assignment 3</p>
     </div>
 </footer>
 </body>

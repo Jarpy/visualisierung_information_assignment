@@ -334,8 +334,120 @@ function setupChapter2Controls() {
 }
 
 // =========================================================================
+// SECTION 3 AUSTRIA POTENTIAL
+// =========================================================================
+
+const AUSTRIA_POTENTIAL_PATH = "./datasets/austria_potential.csv";
+
+async function initChapter3() {
+    d3.select("#date-select").on("change", function() {
+        renderAustriaPotential(this.value);
+    });
+
+    await renderAustriaPotential(2030);
+}
+
+async function renderAustriaPotential(targetYear) {
+    const data = await d3.csv(AUSTRIA_POTENTIAL_PATH, d3.autoType);
+
+    const processedData = data
+        .filter(d => d.year === parseInt(targetYear))
+        .map(d => {
+            const currentPercentage = (d.current / d.technicalMax) * 100;
+
+            return {
+                source: d.source,
+                currentPercentage: currentPercentage,
+                currentValue: d.current,
+                potentialPercentage: (d.potential / d.technicalMax) * 100 - currentPercentage,
+                potentialValue: d.potential,
+                technicalMax: d.technicalMax
+            }
+        });
+
+    const container = d3.select("#bar-austria");
+    container.html("");
+
+    const margin = { top: 20, right: 30, bottom: 40, left: 180 }; // Increased left margin
+    const width = container.node().getBoundingClientRect().width - margin.left - margin.right;
+    const height = 350 - margin.top - margin.bottom;
+
+    const svg = container.append("svg")
+        .attr("viewBox", `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
+        .append("g")
+        .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+    const x = d3.scaleLinear().domain([0, 100]).range([0, width]);
+    const y = d3.scaleBand().domain(processedData.map(d => d.source)).range([0, height]).padding(0.35);
+
+    const stack = d3.stack().keys(["currentPercentage", "potentialPercentage"]);
+    const stackedSeries = stack(processedData);
+
+    // x-axis
+    svg.append("g")
+        .attr("transform", `translate(0, ${height})`)
+        .call(d3.axisBottom(x)
+            .ticks(4)
+            .tickFormat(d => d + "%"))
+        .append("text")
+        .attr("x", width)
+        .attr("y", -10)
+        .attr("fill", "black")
+        .attr("text-anchor", "end")
+        .text("Total Technical Max");
+
+    const groups = svg.selectAll(".layer")
+        .data(stackedSeries)
+        .join("g")
+        .attr("class", d => `layer ${d.key}`);
+
+    groups.selectAll("rect")
+        .data(d => d)
+        .join("rect")
+        .attr("y", d => y(d.data.source))
+        .attr("x", d => x(d[0]))
+        .attr("width", d => x(d[1] - d[0]))
+        .attr("height", y.bandwidth())
+        .on("mouseover", (event, d) => {
+            const label = d3.select(event.currentTarget.parentNode).datum().key;
+            const isCurrent = label === "currentPercentage";
+
+            const value = ((isCurrent ? d.data.currentValue : d.data.potentialValue) / 1000).toFixed(2);
+            const technicalMax = (d.data.technicalMax / 1000).toFixed(2);
+
+            const potentialInfo = `Potential increase until ${targetYear}: ${d.data.potentialPercentage.toFixed(2)}%<br/>`;
+
+            showTooltip(event, `
+                <strong>${d.data.source}</strong><br/>
+                ${!isCurrent ? potentialInfo : ''}
+                Percentage of total possible: ${d[1].toFixed(2)}%<br/>
+                Absolute of total possible: ${value}/${technicalMax} TWh
+        `);
+        })
+        .on("mousemove", moveTooltip)
+        .on("mouseleave", hideTooltip);
+
+    // percentage labels
+    groups.selectAll("text")
+        .data(d => d)
+        .join("text")
+        .attr("class", "bar-label")
+        .attr("x", d => x(d[0] + (d[1] - d[0]) / 2))
+        .attr("y", d => y(d.data.source) + y.bandwidth() / 2)
+        .text(d => {
+            const value = d[1] - d[0];
+            return value > 2 ? `${(value).toFixed(2)}%` : "";
+        });
+
+    svg.append("g")
+        .attr("class", "axis-source")
+        .call(d3.axisLeft(y).tickSize(0));
+}
+
+// =========================================================================
 // SECTION 4 REAL IMPLEMENTATION DATA & LOGIC
 // =========================================================================
+
 const sustainabilityData = [
     { source: "Coal", deaths: 24.6, co2: 820, cost: 105, land: 12 },
     { source: "Oil", deaths: 18.4, co2: 720, cost: 130, land: 15 },
@@ -540,6 +652,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     drawAreaChart('#area-chart', historicalEnergyData.world);
     setupChapter2Controls();
     initScrollama();
+
+    // Render Section 3 Austria Potential
+    await initChapter3();
 
     // Render Section 4 Comparison Elements
     const initMetric = d3.select('#criterion-select').property('value') || 'deaths';
