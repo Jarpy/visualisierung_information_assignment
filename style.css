@@ -323,7 +323,7 @@ footer a:hover { color: var(--accent); }
     shape-rendering: crispEdges;
 }
 
-.layer:hover {
+#area-chart .layer:hover {
     opacity: 1 !important;
     filter: brightness(1.05);
 }
@@ -338,6 +338,11 @@ footer a:hover { color: var(--accent); }
     stroke: var(--border, #dde3db);
     stroke-opacity: 0.6;
     shape-rendering: crispEdges;
+}
+
+#bar-austria rect:hover {
+    opacity: 1 !important;
+    filter: brightness(1.05);
 }
 
 .layer.currentPercentage {
